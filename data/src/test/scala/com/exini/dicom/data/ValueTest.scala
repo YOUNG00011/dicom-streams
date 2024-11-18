@@ -296,6 +296,11 @@ class ValueTest extends AnyFlatSpec with Matchers {
       .toTimes(VR.TM) shouldBe Seq(time, time, time)
   }
 
+  it should "handle missing dot to separate hhmmss from microseconds" in {
+    val time = LocalTime.of(10, 9, 8, 765432000)
+    Value("100908765432".utf8Bytes).toTime(VR.TM) shouldBe Some(time)
+  }
+
   "Parsing a single time string" should "return the first valid entry among multiple values" in {
     val time = LocalTime.of(10, 9, 8, 765432000)
     Value("one\\100908.765432\\100908.765432".utf8Bytes).toTime(VR.TM) shouldBe Some(time)
