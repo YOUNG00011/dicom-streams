@@ -610,8 +610,8 @@ object Value {
 
   final val dateTimeFormat = new DateTimeFormatterBuilder()
     .appendValue(YEAR, 4, 4, SignStyle.EXCEEDS_PAD)
-    .appendPattern("[MM[dd[HH[mm[ss[")
-    .appendFraction(MICRO_OF_SECOND, 1, 6, true)
+    .appendPattern("[MM[dd[HH[mm[ss[[.]")
+    .appendFraction(MICRO_OF_SECOND, 1, 6, false)
     .appendPattern("]]]]]]")
     .parseDefaulting(MONTH_OF_YEAR, 1)
     .parseDefaulting(DAY_OF_MONTH, 1)
