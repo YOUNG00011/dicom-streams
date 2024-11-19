@@ -296,6 +296,11 @@ class ValueTest extends AnyFlatSpec with Matchers {
       .toTimes(VR.TM) shouldBe Seq(time, time, time)
   }
 
+  it should "handle missing dot to separate hhmmss from microseconds" in {
+    val time = LocalTime.of(10, 9, 8, 765432000)
+    Value("100908765432".utf8Bytes).toTime(VR.TM) shouldBe Some(time)
+  }
+
   "Parsing a single time string" should "return the first valid entry among multiple values" in {
     val time = LocalTime.of(10, 9, 8, 765432000)
     Value("one\\100908.765432\\100908.765432".utf8Bytes).toTime(VR.TM) shouldBe Some(time)
@@ -332,7 +337,7 @@ class ValueTest extends AnyFlatSpec with Matchers {
 
   it should "ignore improperly formatted entries" in {
     Value(
-      "200\\2004ab\\20040\\2004032\\200403291\\20040329115\\2004032911593\\200403291159356\\20040329115935.1234567\\20040329115935.12345+000\\20040329115935.123456+00000".utf8Bytes
+      "200\\2004ab\\20040\\2004032\\200403291\\20040329115\\2004032911593\\20040329115935.1234567\\20040329115935.12345+000\\20040329115935.123456+00000".utf8Bytes
     ).toDateTimes(VR.DT) shouldBe empty
   }
 
@@ -351,6 +356,11 @@ class ValueTest extends AnyFlatSpec with Matchers {
   it should "parse time zones" in {
     val dateTime = ZonedDateTime.of(2004, 3, 29, 5, 35, 59, 12345000, ZoneOffset.ofHours(3))
     Value("20040329053559.012345+0300".utf8Bytes).toDateTime(VR.DT) shouldBe Some(dateTime)
+  }
+
+  it should "handle missing dot to separate hhmmss from microseconds" in {
+    val dateTime = ZonedDateTime.of(2004, 3, 29, 5, 35, 59, 12345000, ZoneOffset.UTC)
+    Value("20040329053559012345+0000".utf8Bytes).toDateTime(VR.DT) shouldBe Some(dateTime)
   }
 
   "Parsing a single date time string" should "return the first valid entry among multiple values" in {
